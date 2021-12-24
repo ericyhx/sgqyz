@@ -1,0 +1,40 @@
+# Mac
+.DS_Store
+
+# Java class files
+*.class
+
+# Generated files
+/bin/
+/gen/
+/out/
+
+# Maven
+target/
+
+# Gradle files
+.gradle/
+build/
+
+# Log Files
+*.log
+
+# Intellij
+idea/
+.idea
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings
+.metadata
+.factorypath
+
+#VSCODE
+.vscode/
+
+# jrebel
+rebel.xml
+
+temp_result
