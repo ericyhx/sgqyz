@@ -19,8 +19,9 @@ def login(id: int,device: int):
         c+=1
         s=subprocess.call("adb -s emulator-{} shell am start -n com.tencent.tmgp.sgqyz/.AppActivity".format(device),shell=True)
         log("启动app again result：{}|cnt={}".format(s,c))
-        if c>10:
+        if c>20:
             log("启动app失败")
+            reStartDnplayer(id)
             return -1
         True
     loginTap1=cv2.imread("login/login1.png")

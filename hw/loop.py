@@ -1,25 +1,33 @@
-import subprocess
-import time
+import re,os
 
-import cv2
+import psutil
 
-# while subprocess.call("adb -s emulator-5554 exec-out screencap -p > temp.png",shell=True):
-#     True
-# img=cv2.imread("temp.png",)
-# index=img[690:1222,80:990]
-# cv2.imwrite("temp.png",index)
-# img=cv2.imread("temp.png",0)
-# xy=cv2.imread("xytap.png",0)
-# ret,img = cv2.threshold(img,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-# ret,xy = cv2.threshold(xy,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-# dx=(xy-img).sum()
-# print(dx)
-subprocess.call("adb -s emulator-5554 shell input tap 243 967",shell=True)
-time.sleep(0.3)
-subprocess.call("adb -s emulator-5554 shell input text 666",shell=True)
-time.sleep(0.3)
-subprocess.call("adb -s emulator-5554 shell input tap 646 967",shell=True)
-time.sleep(0.3)
-subprocess.call("adb -s emulator-5554 shell input text 550",shell=True)
-time.sleep(0.3)
-subprocess.call("adb -s emulator-5554 shell input tap 562 1140",shell=True)
+def getLDMem():
+    processName="LdVBoxHeadless.exe"
+    pattern = re.compile(r'([^\s]+)\s+(\d+)\s.*\s([^\s]+\sK)')
+    cmd = 'tasklist /fi "imagename eq ' + processName + '"' + ' | findstr.exe ' + processName
+    result = os.popen(cmd).read()
+    resultList = result.split("\n")
+    ret=False
+    for srcLine in resultList:
+        srcLine="".join(srcLine.split('\n'))
+        if len(srcLine)==0:
+            break;
+        m=pattern.search(srcLine)
+        if m is None:
+            continue
+        pid=m.group(2)
+        if str(os.getpid()) is pid:
+            continue
+        proc=psutil.Process(int(pid))
+        used=proc.memory_info().rss /1024/1024
+        print("name:{}|pid:{}|used memory:{} MB".format(processName,pid,used))
+        if used >3000:
+            ret=True
+    return ret
+
+
+
+
+if __name__ == '__main__':
+    print(getLDMem())

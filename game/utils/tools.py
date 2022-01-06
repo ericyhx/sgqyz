@@ -1,8 +1,9 @@
-import os
+import re,os
 import subprocess
 import time
 from datetime import datetime
 
+import psutil
 import cv2
 import numpy as np
 from PIL import Image
@@ -11,7 +12,8 @@ from pytesseract import pytesseract
 
 
 console = 'D:\\LeiDian\\LDPlayer4.0\\ldconsole.exe '
-
+processName="LdVBoxHeadless.exe"
+pattern = re.compile(r'([^\s]+)\s+(\d+)\s.*\s([^\s]+\sK)')
 def drawView(device: int):
     subprocess.call("adb -s emulator-{} shell input swipe 800 1162 400 1162".format(device),shell=True)
 
@@ -411,6 +413,29 @@ def findDnMult():
     ret=subprocess.call("tasklist|findstr dnmultiplayer",shell=True)
     log("dnmultiplayer：{}".format(ret))
     return ret
+
+def getLDMem():
+    cmd = 'tasklist /fi "imagename eq ' + processName + '"' + ' | findstr.exe ' + processName
+    result = os.popen(cmd).read()
+    resultList = result.split("\n")
+    ret=False
+    for srcLine in resultList:
+        srcLine="".join(srcLine.split('\n'))
+        if len(srcLine)==0:
+            break;
+        m=pattern.search(srcLine)
+        if m is None:
+            continue
+        pid=m.group(2)
+        if str(os.getpid()) is pid:
+            continue
+        proc=psutil.Process(int(pid))
+        used=proc.memory_info().rss /1024/1024
+        log("name:{}|pid:{}|used memory:{} MB".format(processName,pid,used))
+        if used >3000:
+            ret=True
+    return ret
+
 
 
 

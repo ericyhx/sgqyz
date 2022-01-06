@@ -60,7 +60,7 @@ def fightNanman(device: int,fnm: int):
             nmNum=int(nmText[0])
         if len(nmText)==2:
             nmNum=int(nmText[0])*10 + int(nmText[1])
-        if nmNum ==0:
+        if nmNum ==1 or nmNum ==0:
             subprocess.call("adb -s emulator-{} shell input tap 855 58".format(device),shell=True)
             return 0
         # check南蛮
