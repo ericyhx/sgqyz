@@ -1,30 +1,27 @@
-import os
+import cv2
+import numpy as np
 
-console = 'D:\\LeiDian\\LDPlayer4.0\\ldconsole.exe '
 
-def list_running() -> list:
-    result = list()
-    all = get_list()
-    for dn in all:
-        if dn.is_running() is True:
-            result.append(dn)
-    return result
+# 获取可以攻打的坐标
+def getQianWangLoc():
+    gray=cv2.imread("D:/idea_workspace/TaskScript/temp.png")
+    img2=cv2.imread("D:/idea_python/Demo/game/utils/qiangwang.png")
+    # cv2.imshow("1",gray)
+    # cv2.waitKey()
+    # cv2.imshow("2",img2)
+    # cv2.waitKey()
+    threshold = 0.99
+    res=cv2.matchTemplate(gray,img2,cv2.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+    pt = loc[::-1]
+    if len(pt[0])>0 and len(pt[1])>0:
+        tx=pt[0][0]+105
+        ty=pt[1][0]+90
+        return [tx,ty]
+    else:
+        return [813, 588]
 
-def get_list():
-    cmd = os.popen(console + 'list2')
-    text = cmd.read()
-    cmd.close()
-    info = text.split('\n')
-    result = list()
-    for line in info:
-        if len(line) > 1:
-            dnplayer = line.split(',')
-            # result.append(DnPlayer(dnplayer))
-    return result
 
 if __name__ == '__main__':
-    # cmd = console + 'launch --index ' + str(2)
-    # process = os.popen(cmd)
-    # result = process.read()
-    # process.close()
-    print(get_list())
+    ret=getQianWangLoc()
+    print(ret)

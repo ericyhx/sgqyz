@@ -1,3 +1,4 @@
+import datetime
 import subprocess
 import time
 
@@ -8,7 +9,15 @@ from game.nanman.fightNm import fightNanman
 from game.utils.tools import getNum, takeList, chuzheng, reStartDnplayer
 
 
-def fightHuangjin(device: int,fnm: int):
+def fightHuangjin(device,fnm,waitWuKao,wuKaoDate):
+    time_now=datetime.datetime.now()
+    day_now=time_now.day
+    if int(waitWuKao) and day_now!=int(wuKaoDate):
+        cost=fightNanman(device,fnm)
+        log("攻打南蛮后耗时cost:{}".format(cost))
+        if cost is None or cost==0:
+            cost=300
+        return cost
     a=0
     while subprocess.call("adb -s emulator-{} exec-out screencap -p > fightHJ/main.png".format(device),shell=True):
         time.sleep(1)
@@ -55,7 +64,7 @@ def fightHuangjin(device: int,fnm: int):
         ret,factFight = cv2.threshold(factFight,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
         dx=(fightImg-factFight).sum()
         log("黄巾前往歼敌的偏差：{}".format(dx))
-        if dx <10000 :
+        if dx <100000 :
             break
         else:
             time.sleep(1)
@@ -69,7 +78,7 @@ def fightHuangjin(device: int,fnm: int):
     log("攻打黄巾出征cost:{}".format(r))
     if not(r is None) and r==-1:
         return -1
-    time.sleep(2)
+    time.sleep(0.3)
     cost2=fightNanman(device,fnm)
     if cost2==-1:
         return -1

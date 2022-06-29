@@ -23,14 +23,35 @@ from game.utils.tools import dateStr
 # print("kill-server:{}".format(subprocess.call("adb kill-server",shell=True)))
 # time.sleep(1)
 c=0
-while subprocess.call("adb -s emulator-5554 exec-out screencap -p > temp.png",shell=True):
+while subprocess.call("adb -s emulator-5554 exec-out screencap -p > temp3.png",shell=True):
     time.sleep(1)
     print("获取截屏:{}".format(c))
     c+=1
     True
-mainImg=cv2.imread("temp.png")
-loc=mainImg[1632:1690,50:370]
-cv2.imwrite("dayeLoc.png",loc)
+mainImg=cv2.imread("temp3.png")
+loc=mainImg[1720:1842,73:244]
+# #点击：22：918
+# cv2.imwrite("wai.png",loc)
+# cityIn1 = cv2.imread("neiwaichengqiehuan1.png")
+# cityIn2 = cv2.imread("neiwaichengqiehuan2.png")
+city1 = cv2.imread("nei1.png")
+city2 = cv2.imread("nei2.png")
+city3 = cv2.imread("chengwaishiBtn1.png")
+bufIn1=(city1-loc).sum()
+bufIn2=(city2-loc).sum()
+bufIn3=(city3-loc).sum()
+print()
+mainImg=cv2.imread("temp2.png")
+loc=mainImg[427:479,28:241]
+cv2.imwrite("xingjunguanli.png",loc)
+
+mainImg=cv2.imread("temp3.png")
+loc=mainImg[499:1037,78:823]
+cv2.imwrite("xingjunduiwu.png",loc)
+
+mainImg=cv2.imread("temp3.png")
+loc=mainImg[630:670,100:145]
+cv2.imwrite("wakuangduiwu.png",loc)
 
 cur=datetime.datetime.now()
 h=cur.hour

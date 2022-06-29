@@ -30,7 +30,7 @@ def yaoqingzhuchengBtn(n,device):
         ret,factzz = cv2.threshold(factzz,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
         dx=(zz-factzz).sum()
         log("南蛮前往邀请助阵按钮偏差：{}".format(dx))
-        if dx<10000 or dx==278829:
+        if dx<100000 or dx==278829:
             return 0
         else:
             time.sleep(1)
@@ -41,9 +41,9 @@ def yaoqingzhuchengBtn(n,device):
 
 
 def fightNanman(device: int,fnm: int):
-    if not fnm:
+    if not int(fnm):
     # 用于暂停南蛮
-        subprocess.call("adb -s emulator-5554 shell input tap 855 58",shell=True)
+        subprocess.call("adb -s emulator-{} shell input tap 855 58".format(device),shell=True)
         time.sleep(1)
         return 0
 
@@ -97,7 +97,7 @@ def fightNanman(device: int,fnm: int):
             if dx <3000:
                 # 点击集结
                 subprocess.call("adb -s emulator-{} shell input tap 538 1319".format(device),shell=True)
-                time.sleep(2)
+                time.sleep(1)
                 c=0
                 while c<2:
                     c+=1
@@ -263,7 +263,7 @@ def fightNanman(device: int,fnm: int):
         ret,factyq = cv2.threshold(factyq,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
         dx=(yq-factyq).sum()
         log("邀请助阵按钮的偏差：{}".format(dx))
-        if dx<5000:
+        if dx<50000:
             subprocess.call("adb -s emulator-{} shell input tap 887 794".format(device),shell=True)
             time.sleep(3)
             subprocess.call("adb -s emulator-{} shell input tap 55 48".format(device),shell=True)

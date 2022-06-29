@@ -1,3 +1,4 @@
+import datetime
 import re,os
 
 import psutil
@@ -30,4 +31,7 @@ def getLDMem():
 
 
 if __name__ == '__main__':
-    print(getLDMem())
+    time_now=datetime.datetime.now()
+    hour_now=0
+    if 1:
+        print(hour_now)

@@ -9,21 +9,11 @@ from pytesseract import pytesseract
 from game.logutils.mylog import log
 from game.fightHJ.fightHJ import fightHuangjin
 from game.nanman.fightNm import fightNanman
-from game.utils.tools import getNum, takeList, chuzheng, reStartDnplayer
+from game.utils.tools import getNum, takeList, chuzheng, reStartDnplayer,searchBtn
 
 fightTime=0
-def fightTF(device: int,fnm: int):
-    # a=0
-    # while subprocess.call("adb -s emulator-5554 exec-out screencap -p > tufei/main.png",shell=True):
-    #     time.sleep(1)
-    #     a+=1
-    #     if a >5:
-    #         log("=====================重新启动雷电模拟器1=====================")
-    #         # reStartDnplayer()
-    #         return -1
-    #     True
+def fightTF(device,fnm,waitWuKao,wuKaoDate):
     tfNum=0
-
     time_now=datetime.datetime.now()
     hour_now=time_now.hour
     if hour_now < 3:
@@ -59,7 +49,7 @@ def fightTF(device: int,fnm: int):
             ret,factFight = cv2.threshold(factFight,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
             dx=(fightImg-factFight).sum()
             log("前往歼敌的偏差：{}".format(dx))
-            if dx <10000 :
+            if dx <100000 :
                 break
             else:
                 time.sleep(1)
@@ -77,10 +67,10 @@ def fightTF(device: int,fnm: int):
             num=int(text[l-1])
         else:
             num=int(text[l-1])+int(text[l-2])*10
-        if num <12:
+        if num <11:
             subprocess.call("adb -s emulator-{} shell input tap 734 1232".format(device),shell=True)
             time.sleep(1)
-            for i in range (11-num):
+            for i in range (10-num):
                 subprocess.call("adb -s emulator-{} shell input tap 844 975".format(device),shell=True)
                 time.sleep(1)
             subprocess.call("adb -s emulator-{} shell input tap 646 1205".format(device),shell=True)
@@ -91,8 +81,10 @@ def fightTF(device: int,fnm: int):
         log("土匪出征cost:{}".format(fightTime))
         if -1 == fightTime:
             return -1
-        time.sleep(2)
-        cost2=fightNanman(device,fnm)
+        time.sleep(0.3)
+        ret = searchBtn(device)
+        cost2=fightHuangjin(device, fnm, waitWuKao, wuKaoDate)
+        # cost2=fightNanman(device,fnm)
         if cost2==-1:
             return -1
         cost=fightTime-cost2
@@ -100,4 +92,4 @@ def fightTF(device: int,fnm: int):
         return cost if cost > 0 else 0
     else:
         #攻打黄巾
-        return fightHuangjin(device,fnm)
+        return fightHuangjin(device,fnm,waitWuKao,wuKaoDate)

@@ -13,7 +13,7 @@ def doTask(device: int):
     start=time.time()
     a=0
     while subprocess.call("adb -s emulator-{} exec-out screencap -p > cityTask/temp.png".format(device),shell=True):
-        time.sleep(1)
+        time.sleep(0.3)
         a+=1
         if a >5:
             log("=====================重新启动雷电模拟器6=====================")
@@ -29,10 +29,10 @@ def doTask(device: int):
     ret,factLm = cv2.threshold(factLm,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
     dx=(lm-factLm).sum()
     log("联盟按钮的偏差：{}".format(dx))
-    if dx <3000:
+    if dx <300000:
         #点击联盟
         subprocess.call("adb -s emulator-{} shell input tap 986 1832".format(device),shell=True)
-        time.sleep(2)
+        time.sleep(1)
         #点击主页
         subprocess.call("adb -s emulator-{} shell input tap 216 1847".format(device),shell=True)
         time.sleep(1)
@@ -46,7 +46,7 @@ def doTask(device: int):
         while True:
             a=0
             while subprocess.call("adb -s emulator-{} exec-out screencap -p > cityTask/temp.png".format(device),shell=True):
-                time.sleep(1)
+                time.sleep(0.3)
                 a+=1
                 if a >5:
                     log("=====================重新启动雷电模拟器7=====================")
@@ -62,7 +62,7 @@ def doTask(device: int):
             ret,oneKey = cv2.threshold(oneKey,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
             dx=(task-oneKey).sum()
             log("一键执行按钮的偏差：{}".format(dx))
-            if dx <1000:
+            if dx <100000:
                 #点击一键执行
                 subprocess.call("adb -s emulator-{} shell input tap 771 1822".format(device),shell=True)
                 time.sleep(1)

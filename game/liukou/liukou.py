@@ -1,3 +1,4 @@
+import datetime
 import subprocess
 import time
 
@@ -8,8 +9,8 @@ from game.logutils.mylog import log
 from game.utils.tools import chuzheng, processEx, reStartDnplayer
 
 
-def checkLiuKou(device: int):
-    ret=fightLiuKou(device)
+def checkLiuKou(device,waitWuKao,wuKaoDate):
+    ret=fightLiuKou(device,waitWuKao,wuKaoDate)
     if ret==-1:
         log("攻打流寇时出错")
         processEx(device)
@@ -20,10 +21,14 @@ def checkLiuKou(device: int):
         time.sleep(ret)
 
 
-def fightLiuKou(device: int):
+def fightLiuKou(device,waitWuKao,wuKaoDate):
+    time_now=datetime.datetime.now()
+    day_now=time_now.day
+    if int(waitWuKao) and day_now!=int(wuKaoDate):
+        return 0
     a=0
     while subprocess.call("adb -s emulator-{} exec-out screencap -p > liukou/temp.png".format(device),shell=True):
-        time.sleep(1)
+        time.sleep(0.1)
         a+=1
         if a >5:
             log("=====================重新启动雷电模拟器3=====================")
@@ -68,9 +73,9 @@ def fightLiuKou(device: int):
             ret,factCz = cv2.threshold(factCz,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
             dx=(cz-factCz).sum()
             log("流寇出征偏差：{}".format(dx))
-            if dx <1000:
+            if dx <100000:
                 subprocess.call("adb -s emulator-{} shell input tap 534 1348".format(device),shell=True)
-                time.sleep(1)
+                time.sleep(0.3)
                 ret=chuzheng(device)
                 if ret==180:
                     ret=10

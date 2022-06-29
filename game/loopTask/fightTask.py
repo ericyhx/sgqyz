@@ -76,7 +76,7 @@ def findTager2():
     ret,xy = cv2.threshold(xy,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
     dx=(xy-img).sum()
     print(dx)
-    if dx <50000:
+    if dx <100000:
         subprocess.call("adb -s emulator-5554 shell input tap 243 967",shell=True)
         time.sleep(0.1)
         subprocess.call("adb -s emulator-5554 shell input text 665",shell=True)
@@ -117,7 +117,7 @@ def check():
     dx=(xy-img).sum()
     dx1=(xy1-img).sum()
     print("摧毁dx:{}|dx1:{}".format(dx,dx1))
-    if dx <10000 or dx1<10000:
+    if dx <100000 or dx1<100000:
         subprocess.call("adb -s emulator-5554 shell input tap 858 1061",shell=True)
         time.sleep(0.5)
         subprocess.call("adb -s emulator-5554 shell input tap 714 1816",shell=True)

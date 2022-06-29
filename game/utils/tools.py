@@ -21,7 +21,7 @@ def getNum(index :int,device: int):
     drawView(device)
     a=0
     while subprocess.call("adb -s emulator-{} exec-out screencap -p > utils/main.png".format(device),shell=True):
-        time.sleep(1)
+        time.sleep(0.3)
         a+=1
         if a >5:
             log("=====================重新启动雷电模拟器9=====================")
@@ -48,7 +48,7 @@ def getNum(index :int,device: int):
          over=cv2.imread("utils/ftOver.png")
          cur=cv2.imread("utils/tfNum.png")
          r=(over-cur).sum()
-         if r <1000:
+         if r <100000:
             text="0"
          else:
             text = pytesseract.image_to_string(Image.open("utils/tfNum.png"),lang="eng",config='--psm 13 --oem 3 -c tessedit_char_whitelist=0123456789')
@@ -73,9 +73,9 @@ def chuzheng(device: int):
     c=0
     while True:
         a=0
-        time.sleep(3)
+        time.sleep(0.5)
         while subprocess.call("adb -s emulator-{} exec-out screencap -p > utils/main.png".format(device),shell=True):
-            time.sleep(1)
+            time.sleep(0.3)
             a+=1
             if a >5:
                 log("=====================重新启动雷电模拟器12=====================")
@@ -98,15 +98,15 @@ def chuzheng(device: int):
         ret,dw = cv2.threshold(dw,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
         dx2=(dw-dw0).sum()
         log("出征按钮偏差：{}|队伍编队偏差：{}".format(dx,dx2))
-        if dx <1000 and dx2 > 10000:
+        if dx <100000 and dx2 > 100000:
             ts=mainImg[1650:1692,632:780]
             cv2.imwrite("utils/time.png",ts)
             t=parseTime("utils/time.png")
             subprocess.call("adb -s emulator-{} shell input tap 616 1842".format(device),shell=True)
-            time.sleep(1)
+            time.sleep(0.3)
             return t
         else:
-            time.sleep(1)
+            time.sleep(0.3)
             c+=1
         if c >10:
             log("出征界面错误，超时")
@@ -115,44 +115,44 @@ def chuzheng(device: int):
 def takeList(tx,ty,n,device):
     #点击目标
     subprocess.call("adb -s emulator-{} shell input tap {} {}".format(device,tx,ty),shell=True)
-    time.sleep(1)
+    time.sleep(0.5)
     c=0
-    while True:
-        a=0
-        while subprocess.call("adb -s emulator-{} exec-out screencap -p > utils/main.png".format(device),shell=True):
-            time.sleep(1)
-            a+=1
-            if a >5:
-                log("=====================重新启动雷电模拟器10=====================")
-                # reStartDnplayer()
-                return -1
-            True
-        mainImg=cv2.imread("utils/main.png")
-        loc=mainImg[1632:1690,50:370]
-        cv2.imwrite("utils/temp.png",loc)
-        msg=cv2.imread("utils/temp.png",0)
-        msg1=cv2.imread("utils/kuagLoc.png",0)
-        msg2=cv2.imread("utils/dayeLoc.png",0)
-        msg3=cv2.imread("utils/nanManLoc.png",0)
-        ret,msg = cv2.threshold(msg,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-        ret,msg1 = cv2.threshold(msg1,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-        ret,msg2 = cv2.threshold(msg2,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-        ret,msg3 = cv2.threshold(msg3,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
-        wkDx=(msg-msg1).sum()
-        dayeDx=(msg-msg2).sum()
-        nmDx=(msg-msg3).sum()
-        c+=1
-        log("index:{}|矿洞搜索中心偏差：{}，土匪黄巾搜索中心偏差：{}，南蛮搜索中心偏差：{}".format(n,wkDx,dayeDx,nmDx))
-        if n==0 and wkDx <2000:
-            break
-        if n==1 and dayeDx <2000:
-            break
-        if n==2 and nmDx<2000:
-            break
-        time.sleep(1)
-        if c>15:
-            log("比对搜索中心超时")
-            return -1
+    # while True:
+    #     a=0
+    #     while subprocess.call("adb -s emulator-{} exec-out screencap -p > utils/main.png".format(device),shell=True):
+    #         time.sleep(0.3)
+    #         a+=1
+    #         if a >5:
+    #             log("=====================重新启动雷电模拟器10=====================")
+    #             # reStartDnplayer()
+    #             return -1
+    #         True
+    #     mainImg=cv2.imread("utils/main.png")
+    #     loc=mainImg[1632:1690,50:370]
+    #     cv2.imwrite("utils/temp.png",loc)
+    #     msg=cv2.imread("utils/temp.png",0)
+    #     msg1=cv2.imread("utils/kuagLoc.png",0)
+    #     msg2=cv2.imread("utils/dayeLoc.png",0)
+    #     msg3=cv2.imread("utils/nanManLoc.png",0)
+    #     ret,msg = cv2.threshold(msg,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
+    #     ret,msg1 = cv2.threshold(msg1,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
+    #     ret,msg2 = cv2.threshold(msg2,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
+    #     ret,msg3 = cv2.threshold(msg3,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
+    #     wkDx=(msg-msg1).sum()
+    #     dayeDx=(msg-msg2).sum()
+    #     nmDx=(msg-msg3).sum()
+    #     c+=1
+    #     log("index:{}|矿洞搜索中心偏差：{}，土匪黄巾搜索中心偏差：{}，南蛮搜索中心偏差：{}".format(n,wkDx,dayeDx,nmDx))
+    #     if n==0 and wkDx <200000:
+    #         break
+    #     if n==1 and dayeDx <200000:
+    #         break
+    #     if n==2 and nmDx<200000:
+    #         break
+    #     time.sleep(0.3)
+    #     if c>15:
+    #         log("比对搜索中心超时")
+    #         return -1
 
 
     # 点击搜索
@@ -174,7 +174,7 @@ def takeList(tx,ty,n,device):
         factGoTap=cv2.imread("utils/qiangwang.png")
         dx=(goTap-factGoTap).sum()
         log("搜索列表的偏差：{}".format(dx))
-        if dx <1000:
+        if dx <100000:
             res=getQianWangLoc(device)
             if res is None:
                 return -1
@@ -231,24 +231,26 @@ def getQianWangLoc(device: int):
 def searchBtn(device: int):
     # 1、判断是不是城外
     a=0
+    log("开始截屏")
     while subprocess.call("adb -s emulator-{} exec-out screencap -p > utils/main.png".format(device),shell=True):
-        time.sleep(1)
+        time.sleep(0.3)
         a+=1
         if a >5:
             log("=====================重新启动雷电模拟器8=====================")
             # reStartDnplayer()
             return False
         True
+    log("截屏结束")
     mainImg=cv2.imread("utils/main.png")
     tianxiaTag=mainImg[19:148,13:146]
     worldTag=cv2.imread("utils/world.png")
     buf=(worldTag-tianxiaTag).sum()
     log("主城外图标的偏移:{}".format(buf))
-    if buf <10000:
+    if buf <100000:
         log("确认是在城外，满足打野条件")
         # 点击搜索
         subprocess.call("adb -s emulator-{} shell input tap 81 1376".format(device),shell=True)
-        time.sleep(1)
+        time.sleep(0.3)
         return True
     return False
 
@@ -308,7 +310,7 @@ def processEx(device: int):
     ret,factFh1 = cv2.threshold(factFh1,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
     dx=(fanhui-factFh).sum()
     dx2=(fanhui-factFh1).sum()
-    if dx<1000 or dx2 <1000:
+    if dx<100000 or dx2 <100000:
         log("界面存在返回按钮，按钮偏差：{}".format(dx))
         subprocess.call("adb -s emulator-{} shell input tap 54 47".format(device),shell=True)
         time.sleep(1)

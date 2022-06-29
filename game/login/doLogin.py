@@ -49,7 +49,7 @@ def login(id: int,device: int):
         ret,msg = cv2.threshold(msg,0,255,cv2.THRESH_BINARY|cv2.THRESH_TRIANGLE)
         dx=(msg0-msg).sum()
         log("进入游戏界面是否存在提示偏差：{}".format(dx))
-        if dx<5000:
+        if dx<50000:
             subprocess.call("adb -s emulator-{} shell input tap 486 1209".format(device),shell=True)
             time.sleep(1)
         imageBuf1=startTap-loginTap1
@@ -101,13 +101,13 @@ def changeToCityOut(device: int):
         bufOut=(swImg-cityOut).sum()
         log("in1->{},in2->{},out->{}".format(bufIn1,bufIn2,bufOut))
         # 在城内有蒙层
-        if bufIn1 <10000 :
+        if bufIn1 <100000 :
             log("在城内有蒙层")
             subprocess.call("adb -s emulator-{} shell input tap 158 1780".format(device),shell=True)
-        elif bufIn2 < 10000 :
+        elif bufIn2 < 100000 :
             log("在城内无蒙层")
             subprocess.call("adb -s emulator-{} shell input tap 158 1780".format(device),shell=True)
-        elif bufOut <10000:
+        elif bufOut <100000:
             log("在城外")
             isfinish=True
         else:
